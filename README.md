@@ -1,5 +1,10 @@
-# csimple-externalcsgo
-Simple external written in c#.
-Include:
--glow esp
--radar hack
+# CSimple
+
+Simple external written in C#.
+
+## Features
+
+```
+GlowESP
+RadarHack
+```
