@@ -30,6 +30,7 @@
         {
             this.GlowBox = new System.Windows.Forms.CheckBox();
             this.RadarBox = new System.Windows.Forms.CheckBox();
+            this.GlowCombo = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // GlowBox
@@ -46,7 +47,7 @@
             // RadarBox
             // 
             this.RadarBox.AutoSize = true;
-            this.RadarBox.Location = new System.Drawing.Point(119, 26);
+            this.RadarBox.Location = new System.Drawing.Point(12, 56);
             this.RadarBox.Name = "RadarBox";
             this.RadarBox.Size = new System.Drawing.Size(81, 17);
             this.RadarBox.TabIndex = 1;
@@ -54,11 +55,24 @@
             this.RadarBox.UseVisualStyleBackColor = true;
             this.RadarBox.CheckedChanged += new System.EventHandler(this.RadarBox_CheckedChanged);
             // 
+            // GlowCombo
+            // 
+            this.GlowCombo.FormattingEnabled = true;
+            this.GlowCombo.Items.AddRange(new object[] {
+            "All",
+            "Enemy Only"});
+            this.GlowCombo.Location = new System.Drawing.Point(89, 26);
+            this.GlowCombo.Name = "GlowCombo";
+            this.GlowCombo.Size = new System.Drawing.Size(121, 21);
+            this.GlowCombo.TabIndex = 2;
+            this.GlowCombo.SelectedIndexChanged += new System.EventHandler(this.GlowCombo_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(221, 61);
+            this.ClientSize = new System.Drawing.Size(221, 85);
+            this.Controls.Add(this.GlowCombo);
             this.Controls.Add(this.RadarBox);
             this.Controls.Add(this.GlowBox);
             this.Name = "Form1";
@@ -73,6 +87,7 @@
 
         private System.Windows.Forms.CheckBox GlowBox;
         private System.Windows.Forms.CheckBox RadarBox;
+        private System.Windows.Forms.ComboBox GlowCombo;
     }
 }
 

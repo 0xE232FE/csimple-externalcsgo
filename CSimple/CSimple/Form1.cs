@@ -59,6 +59,9 @@ namespace CSimple
             while (true)
             {
                 int GlowBase = ReadMemory<int>((int)g_pClient + dwGlowObjectManager);
+                int Local = ReadMemory<int>((int)g_pClient + dwLocalPlayer);
+                int LocalTeam = ReadMemory<int>(Local + m_iTeamNum);
+                GlowObject GlowObj = new GlowObject();
                 for (var i = 0; i < 64; i++)
                 {
                     int EntBase = ReadMemory<int>((int)g_pClient + dwEntityList + i * 0x10);
@@ -70,18 +73,28 @@ namespace CSimple
                     int Spotted = ReadMemory<int>((int)EntBase + m_bSpotted);
                     if (Globals.bRadar)
                     {
-                        if (Spotted == 0) WriteMemory<int>((int)EntBase + m_bSpotted, 1);
+                        if (Spotted == 0 && Team != LocalTeam) WriteMemory<int>((int)EntBase + m_bSpotted, 1);
                     }
                     if (Globals.bGlow)
                     {
-                        GlowObject GlowObj = new GlowObject();
                         GlowObj = ReadMemory<GlowObject>(GlowBase + GlowIndex * 0x38);
-                        SDK.Structs.Color GlowColor = new SDK.Structs.Color(0,0,255,255);
-
-                        GlowObj.r = GlowColor.r / 255;
-                        GlowObj.g = GlowColor.g / 255;
-                        GlowObj.b = GlowColor.b / 255;
-                        GlowObj.a = GlowColor.a / 255;
+                        if (Team == LocalTeam)
+                        {
+                            if (Globals.iGlowMode == 0)
+                            {
+                                GlowObj.r = 0;
+                                GlowObj.g = 1.0f;
+                                GlowObj.b = 0;
+                                GlowObj.a = 0.7f;
+                            }
+                        }
+                        else
+                        {
+                            GlowObj.r = 1.0f;
+                            GlowObj.g = 0;
+                            GlowObj.b = 0;
+                            GlowObj.a = 0.7f;
+                        }
                         GlowObj.m_bRenderWhenOccluded = true;
                         GlowObj.m_bRenderWhenUnoccluded = false;
                         GlowObj.m_bFullBloom = false;
@@ -106,6 +119,11 @@ namespace CSimple
         private void RadarBox_CheckedChanged(object sender, EventArgs e)
         {
             Globals.bRadar = !Globals.bRadar;
+        }
+
+        private void GlowCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Globals.iGlowMode = GlowCombo.SelectedIndex;
         }
     }
 }

@@ -10,5 +10,6 @@ namespace CSimple.SDK
     {
         public static bool bGlow = false;
         public static bool bRadar = false;
+        public static int iGlowMode;
     }
 }
