@@ -1,0 +1,111 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using static CSimple.SDK.Memory;
+using System.Threading;
+using static CSimple.SDK.Offsets;
+using CSimple.SDK;
+using static CSimple.SDK.Structs.GlowObject;
+using CSimple.SDK.Structs;
+
+namespace CSimple
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            Init();
+        }
+        public void Init()
+        {
+            if (Process.GetProcessesByName("csgo").Length > 0)
+            {
+                g_pProcess = Process.GetProcessesByName("csgo")[0];
+                g_pProcessHandle = OpenProcess(0x0008 | 0x0010 | 0x0020, false, g_pProcess.Id);
+                foreach (ProcessModule Module in g_pProcess.Modules)
+                {
+                    if ((Module.ModuleName == "engine.dll"))
+                    {
+                        g_pEngine = Module.BaseAddress;
+                    }
+
+                    if ((Module.ModuleName == "client.dll"))
+                    {
+                        g_pClient = Module.BaseAddress;
+                    }
+
+                }
+                Thread Updater = new Thread(MainLoop);
+                Updater.Start();
+            }
+            else
+            {
+                MessageBox.Show("Start csgo.exe!", "CSimple", MessageBoxButtons.OK);
+                Environment.Exit(1);
+            }
+
+        }
+        public static void MainLoop()
+        {
+            while (true)
+            {
+                int GlowBase = ReadMemory<int>((int)g_pClient + dwGlowObjectManager);
+                for (var i = 0; i < 64; i++)
+                {
+                    int EntBase = ReadMemory<int>((int)g_pClient + dwEntityList + i * 0x10);
+                    if (EntBase == 0) continue;
+                    int Dormant = ReadMemory<int>((int)EntBase + m_bDormant);
+                    if (Dormant == 1) continue;
+                    int Team = ReadMemory<int>((int)EntBase + m_iTeamNum);
+                    int GlowIndex = ReadMemory<int>((int)EntBase + m_iGlowIndex);
+                    int Spotted = ReadMemory<int>((int)EntBase + m_bSpotted);
+                    if (Globals.bRadar)
+                    {
+                        if (Spotted == 0) WriteMemory<int>((int)EntBase + m_bSpotted, 1);
+                    }
+                    if (Globals.bGlow)
+                    {
+                        GlowObject GlowObj = new GlowObject();
+                        GlowObj = ReadMemory<GlowObject>(GlowBase + GlowIndex * 0x38);
+                        SDK.Structs.Color GlowColor = new SDK.Structs.Color(0,0,255,255);
+
+                        GlowObj.r = GlowColor.r / 255;
+                        GlowObj.g = GlowColor.g / 255;
+                        GlowObj.b = GlowColor.b / 255;
+                        GlowObj.a = GlowColor.a / 255;
+                        GlowObj.m_bRenderWhenOccluded = true;
+                        GlowObj.m_bRenderWhenUnoccluded = false;
+                        GlowObj.m_bFullBloom = false;
+
+                        WriteMemory<GlowObject>(GlowBase + GlowIndex * 0x38, GlowObj);
+
+                    }
+                }
+            }
+
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GlowBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Globals.bGlow = !Globals.bGlow;
+        }
+
+        private void RadarBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Globals.bRadar = !Globals.bRadar;
+        }
+    }
+}
