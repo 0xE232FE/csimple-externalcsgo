@@ -75,6 +75,7 @@ namespace CSimple
                     int Team = ReadMemory<int>((int)EntBase + m_iTeamNum);
                     int GlowIndex = ReadMemory<int>((int)EntBase + m_iGlowIndex);
                     int Spotted = ReadMemory<int>((int)EntBase + m_bSpotted);
+                    bool Visible = IsVisible(Local, EntBase);
                     if (Globals.bRadar)
                     {
                         if (Spotted == 0 && Team != LocalTeam) WriteMemory<int>((int)EntBase + m_bSpotted, 1);
@@ -94,10 +95,12 @@ namespace CSimple
                         }
                         else
                         {
-                            GlowObj.r = 1.0f;
-                            GlowObj.g = 0;
-                            GlowObj.b = 0;
-                            GlowObj.a = 0.7f;
+                            if (Globals.iGlowMode == 2)
+                                if (!Visible) continue;
+                                GlowObj.r = 1.0f;
+                                GlowObj.g = 0;
+                                GlowObj.b = 0;
+                                GlowObj.a = 0.7f;                         
                         }
                         GlowObj.m_bRenderWhenOccluded = true;
                         GlowObj.m_bRenderWhenUnoccluded = false;
@@ -122,6 +125,12 @@ namespace CSimple
                 #endregion
             }
 
+        }
+        public static bool IsVisible(int local, int entity)
+        {
+            int mask = ReadMemory<int>(entity + m_bSpottedByMask);
+            int PBASE = ReadMemory<int>(local + 0x64) - 1;
+            return (mask & (1 << PBASE)) > 0;
         }
         private void Form1_Load(object sender, EventArgs e)
         {

@@ -33,8 +33,8 @@
             this.GlowCombo = new System.Windows.Forms.ComboBox();
             this.NoFlashCheck = new System.Windows.Forms.CheckBox();
             this.Header = new System.Windows.Forms.Panel();
-            this.HeaderTitle = new System.Windows.Forms.Label();
             this.HeaderClose = new System.Windows.Forms.Label();
+            this.HeaderTitle = new System.Windows.Forms.Label();
             this.FovCheck = new System.Windows.Forms.CheckBox();
             this.Header.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +78,8 @@
             this.GlowCombo.FormattingEnabled = true;
             this.GlowCombo.Items.AddRange(new object[] {
             "All",
-            "Enemy Only"});
+            "Enemy Only",
+            "Visible Only"});
             this.GlowCombo.Location = new System.Drawing.Point(109, 52);
             this.GlowCombo.Name = "GlowCombo";
             this.GlowCombo.Size = new System.Drawing.Size(121, 25);
@@ -111,18 +112,6 @@
             this.Header.Size = new System.Drawing.Size(242, 34);
             this.Header.TabIndex = 4;
             // 
-            // HeaderTitle
-            // 
-            this.HeaderTitle.AutoSize = true;
-            this.HeaderTitle.BackColor = System.Drawing.Color.Transparent;
-            this.HeaderTitle.Font = new System.Drawing.Font("Century Gothic", 15F);
-            this.HeaderTitle.ForeColor = System.Drawing.Color.White;
-            this.HeaderTitle.Location = new System.Drawing.Point(73, 6);
-            this.HeaderTitle.Name = "HeaderTitle";
-            this.HeaderTitle.Size = new System.Drawing.Size(90, 23);
-            this.HeaderTitle.TabIndex = 0;
-            this.HeaderTitle.Text = "CSimple";
-            // 
             // HeaderClose
             // 
             this.HeaderClose.AutoSize = true;
@@ -135,6 +124,18 @@
             this.HeaderClose.TabIndex = 1;
             this.HeaderClose.Text = "x";
             this.HeaderClose.Click += new System.EventHandler(this.HeaderClose_Click);
+            // 
+            // HeaderTitle
+            // 
+            this.HeaderTitle.AutoSize = true;
+            this.HeaderTitle.BackColor = System.Drawing.Color.Transparent;
+            this.HeaderTitle.Font = new System.Drawing.Font("Century Gothic", 15F);
+            this.HeaderTitle.ForeColor = System.Drawing.Color.White;
+            this.HeaderTitle.Location = new System.Drawing.Point(73, 6);
+            this.HeaderTitle.Name = "HeaderTitle";
+            this.HeaderTitle.Size = new System.Drawing.Size(90, 23);
+            this.HeaderTitle.TabIndex = 0;
+            this.HeaderTitle.Text = "CSimple";
             // 
             // FovCheck
             // 
