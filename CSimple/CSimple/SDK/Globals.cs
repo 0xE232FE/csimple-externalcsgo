@@ -10,6 +10,9 @@ namespace CSimple.SDK
     {
         public static bool bGlow = false;
         public static bool bRadar = false;
+        public static bool bNoflash = false;
+        public static bool bFov = false;
         public static int iGlowMode;
+        public static int iFov = 90;
     }
 }

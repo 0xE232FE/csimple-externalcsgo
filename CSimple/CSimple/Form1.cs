@@ -61,7 +61,11 @@ namespace CSimple
                 int GlowBase = ReadMemory<int>((int)g_pClient + dwGlowObjectManager);
                 int Local = ReadMemory<int>((int)g_pClient + dwLocalPlayer);
                 int LocalTeam = ReadMemory<int>(Local + m_iTeamNum);
+                int LocalFlash = ReadMemory<int>(Local + m_flFlashMaxAlpha);
+                int LocalFov = ReadMemory<int>(Local + m_iFOVStart);
+                int LocalScope = ReadMemory<int>(Local + m_bIsScoped);
                 GlowObject GlowObj = new GlowObject();
+                #region EntityLoop
                 for (var i = 0; i < 64; i++)
                 {
                     int EntBase = ReadMemory<int>((int)g_pClient + dwEntityList + i * 0x10);
@@ -103,12 +107,25 @@ namespace CSimple
 
                     }
                 }
+                #endregion
+                #region NoEntityLoopThings
+                if (Globals.bNoflash)
+                {
+                    if (LocalFlash > 1) WriteMemory<int>(Local + m_flFlashMaxAlpha, 0);
+                }
+                if (Globals.bFov)
+                {
+                    if(LocalScope == 0) {
+                        if (LocalFov != 90) WriteMemory<int>(Local + m_iFOVStart, 90);
+                    }
+                }
+                #endregion
             }
 
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            GlowCombo.SelectedIndex = 0;
         }
 
         private void GlowBox_CheckedChanged(object sender, EventArgs e)
@@ -124,6 +141,21 @@ namespace CSimple
         private void GlowCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             Globals.iGlowMode = GlowCombo.SelectedIndex;
+        }
+
+        private void NoFlashCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            Globals.bNoflash = !Globals.bNoflash;
+        }
+
+        private void HeaderClose_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(1);
+        }
+
+        private void FovCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            Globals.bFov = !Globals.bFov;
         }
     }
 }
