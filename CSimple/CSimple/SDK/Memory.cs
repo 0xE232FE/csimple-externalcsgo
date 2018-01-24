@@ -17,6 +17,10 @@ namespace CSimple.SDK
 
         [DllImport("kernel32.dll")]
         private static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] buffer, int size, out int lpNumberOfBytesWritten);
+
+        [DllImport("user32.dll")]
+        public static extern short GetAsyncKeyState(int vKey);
+
         public static Process g_pProcess;
         public static IntPtr g_pProcessHandle;
         public static IntPtr g_pClient;
@@ -32,7 +36,6 @@ namespace CSimple.SDK
 
             return  ByteArrayToStructure<T>(buffer);
         }
-
 
         public static void WriteMemory<T>(int Adress, object Value)
         {
